@@ -1,15 +1,22 @@
-import torch
 from solver import solver
+from cec2017.functions import f3, f12
+import autograd.numpy as np
+from matplotlib import pyplot as plt
 
 
-def f(x):
-    return torch.sin(x)  # example function for debugging
+def quadriatic(x):
+    return np.sum(x ** 2)
 
 
 def main():
-    x0 = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
-    result = solver(f, x0, 1, 1e-10)
+
+    x0 = np.random.uniform(-100, 100, 10)
+    result, iterations, values = solver(f3, x0, 0.000001, 1e-4, 1000, 100)
     print(result)
+    print(quadriatic(result))
+    plt.plot(range(iterations), values)
+    plt.show()
+    print(values)
 
 
 if __name__ == "__main__":
