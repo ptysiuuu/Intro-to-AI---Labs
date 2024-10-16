@@ -28,21 +28,43 @@ def quadriatic(x):
     return np.sum(x ** 2)
 
 
-def main(function):
-
-    init_plot(function)
-    x0 = np.random.uniform(-100, 100, 10)
-    result, iterations, values, time = solver(function, x0, 0.1, 1e-4, 1000, 100)
-    plt.show()
-    plt.clf()
-    print(np.round(result, decimals=2))
-    print(np.round(function(result), decimals=2))
-    print(f'Time taken: {time:.2f}')
+def plot_results(values, iterations, arrows=None, function=None):
+    if arrows and function:
+        init_plot(function)
+        for arrow in arrows:
+            plt.arrow(
+                arrow[0][0],  # x
+                arrow[0][1],  # y
+                arrow[1][0] - arrow[0][0],  # dx
+                arrow[1][1] - arrow[0][1],  # dy
+                head_width=1, head_length=1, fc='k', ec='k'
+                )
+        plt.show()
+        plt.clf()
     plt.plot(range(iterations), values)
     plt.ylabel('q(xt) - wartość funkcji celu dla iteracji')
     plt.xlabel('t - numer iteracji')
     plt.show()
 
 
+def main():
+    x0 = np.random.uniform(-100, 100, 10)
+    STEP_SIZE = 0.1
+    EPSILON = 1e-4
+    MAX_ITERATIONS = 1000
+    MAX_BOUND = 100
+    FUNCTION = quadriatic
+
+    result, iterations, values, time, arrows = solver(
+        FUNCTION, x0, STEP_SIZE, EPSILON, MAX_ITERATIONS, MAX_BOUND
+        )
+
+    print(np.round(result, decimals=2))
+    print(np.round(FUNCTION(result), decimals=2))
+    print(time)
+
+    plot_results(values, iterations, arrows, FUNCTION)
+
+
 if __name__ == "__main__":
-    main(quadriatic)
+    main()
