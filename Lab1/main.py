@@ -5,11 +5,11 @@ from matplotlib import pyplot as plt
 
 
 def init_plot(function):
-    MAX_X = 100
+    MAX_BOUND = 100
     PLOT_STEP = 0.1
 
-    x_arr = np.arange(-MAX_X, MAX_X, PLOT_STEP)
-    y_arr = np.arange(-MAX_X, MAX_X, PLOT_STEP)
+    x_arr = np.arange(-MAX_BOUND, MAX_BOUND, PLOT_STEP)
+    y_arr = np.arange(-MAX_BOUND, MAX_BOUND, PLOT_STEP)
     X, Y = np.meshgrid(x_arr, y_arr)
     Z = np.empty(X.shape)
 
@@ -48,20 +48,19 @@ def plot_results(values, iterations, arrows=None, function=None):
 
 
 def main():
-    x0 = np.random.uniform(-100, 100, 10)
-    STEP_SIZE = 0.1
+    STEP_SIZE = 1e-8
     EPSILON = 1e-4
     MAX_ITERATIONS = 1000
     MAX_BOUND = 100
-    FUNCTION = quadriatic
-
+    FUNCTION = f3
+    x0 = np.random.uniform(-MAX_BOUND, MAX_BOUND, 10)
     result, iterations, values, time, arrows = solver(
         FUNCTION, x0, STEP_SIZE, EPSILON, MAX_ITERATIONS, MAX_BOUND
         )
 
     print(np.round(result, decimals=2))
     print(np.round(FUNCTION(result), decimals=2))
-    print(time)
+    print(f'Czas działania: {np.round(time, decimals=5)} sekund.')
 
     plot_results(values, iterations, arrows, FUNCTION)
 

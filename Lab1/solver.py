@@ -3,7 +3,9 @@ import autograd.numpy as np
 from time import time
 
 
-def solver(f, x, step_size, epsilon, iterations, max_bound, plot_2d=False):
+def solver(
+        f, x, step_size, epsilon, iterations, max_bound, plot_2d=False
+):
     gradient_function = grad(f)
     values = []
     start = time()
