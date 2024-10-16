@@ -4,7 +4,7 @@ from time import time
 
 
 def solver(
-        f, x, step_size, epsilon, iterations, max_bound, plot_2d=False
+        f, x, beta, epsilon, iterations, max_bound, plot_2d=False
 ):
     gradient_function = grad(f)
     values = []
@@ -15,7 +15,7 @@ def solver(
         gradient = gradient_function(x)
         y = f(x)
         values.append(y)
-        x = x - gradient * step_size
+        x = x - gradient * beta
         x = np.clip(x, -max_bound, max_bound)
         if plot_2d:
             arrows.append([previous_x, x])
