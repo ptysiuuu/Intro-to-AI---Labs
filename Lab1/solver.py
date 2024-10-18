@@ -1,30 +1,39 @@
-from autograd import grad
-import autograd.numpy as np
+import numpy as np
 from time import time
+from copy import deepcopy
+
+
+def gradient_func(f, x, epsilon):
+    H = epsilon
+    y  = f(x)
+    dimensions = len(x[0])
+    gradient_value = np.zeros(dimensions)
+    for n in range(dimensions):
+        xn = deepcopy(x)
+        xn[0][n] = xn[0][n] + H
+        derivative = (f(xn) - y) / H
+        gradient_value[n] = derivative
+    return gradient_value
+
 
 
 def solver(
-        f, x, beta, epsilon, iterations, max_bound, plot_2d=False
+        f, x, beta, epsilon, iterations, max_bound
 ):
-    gradient_function = grad(f)
     values = []
     start = time()
-    arrows = []
-    for n in range(iterations):
-        previous_x = x
-        gradient = gradient_function(x)
+    for n in range(1, iterations + 1):
+        gradient = gradient_func(f, x, epsilon)
         y = f(x)
         values.append(y)
         x = x - gradient * beta
         x = np.clip(x, -max_bound, max_bound)
-        if plot_2d:
-            arrows.append([previous_x, x])
         if (
             (np.linalg.norm(gradient) <= epsilon)
         ):
             end = time()
             print(f'Solution found in {n} iterations.')
-            return x, n + 1, values, end - start, arrows
+            return x, n, values, end - start
     print("Solution not found.")
     end = time()
-    return x, iterations, values, end - start, arrows
+    return x, iterations, values, end - start

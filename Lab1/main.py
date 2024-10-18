@@ -1,68 +1,56 @@
 from solver import solver
 from cec2017.functions import f3, f12
-import autograd.numpy as np
+import numpy as np
 from matplotlib import pyplot as plt
 
 
-def init_plot(function):
-    MAX_BOUND = 100
-    PLOT_STEP = 0.1
+def my_f3(params):
+    return f3(params)[0]
 
-    x_arr = np.arange(-MAX_BOUND, MAX_BOUND, PLOT_STEP)
-    y_arr = np.arange(-MAX_BOUND, MAX_BOUND, PLOT_STEP)
-    X, Y = np.meshgrid(x_arr, y_arr)
-    Z = np.empty(X.shape)
 
-    q = function
-    for i in range(X.shape[0]):
-        for j in range(X.shape[1]):
-            point = np.zeros(10)
-            point[0] = X[i, j]
-            point[1] = Y[i, j]
-            Z[i, j] = q(point)
-
-    plt.contour(X, Y, Z, 20)
+def my_f12(params):
+    return f12(params)[0]
 
 
 def quadriatic(x):
-    return np.sum(x ** 2)
+    return np.sum(x[0] ** 2)
 
 
-def plot_results(values, iterations, arrows=None, function=None):
-    if arrows and function:
-        init_plot(function)
-        for arrow in arrows:
-            plt.arrow(
-                arrow[0][0],  # x
-                arrow[0][1],  # y
-                arrow[1][0] - arrow[0][0],  # dx
-                arrow[1][1] - arrow[0][1],  # dy
-                head_width=1, head_length=1, fc='k', ec='k'
-                )
-        plt.show()
-        plt.clf()
-    plt.plot(range(iterations), values)
-    plt.ylabel('q(xt) - wartość funkcji celu dla iteracji')
-    plt.xlabel('t - numer iteracji')
+def plot_results(values, iterations, semilogy=True):
+    for n in range(len(values)):
+        if semilogy:
+            plt.semilogy(range(iterations[n]), values[n])
+        else:
+            plt.plot(range(iterations[n]), values[n])
+    plt.ylabel('q(xt) - function value for iteration')
+    plt.xlabel('t - iteration number')
     plt.show()
 
 
 def main():
-    STEP_SIZE = 1e-8
-    EPSILON = 1e-4
-    MAX_ITERATIONS = 1000
+    BETA = 0.001
+    EPSILON = 1e-6
+    MAX_ITERATIONS = 10000
     MAX_BOUND = 100
-    FUNCTION = f3
-    x0 = np.random.uniform(-MAX_BOUND, MAX_BOUND, 10)
-    result, iterations, values, time, arrows = solver(
-        FUNCTION, x0, STEP_SIZE, EPSILON, MAX_ITERATIONS, MAX_BOUND
-        )
+    FUNCTION = quadriatic
+    TRIALS = 5
 
-    print(np.round(result, decimals=2))
-    print(np.round(FUNCTION(result), decimals=2))
-    print(f'Czas działania: {np.round(time, decimals=5)} sekund.')
+    all_values = []
+    all_iterations = []
 
-    plot_results(values, iterations, arrows, FUNCTION)
+    for n in range(TRIALS):
+        x0 = np.random.uniform(-MAX_BOUND, MAX_BOUND, size=(1, 10))
+        result, iterations, values, time = solver(
+            FUNCTION, x0, BETA, EPSILON, MAX_ITERATIONS, MAX_BOUND
+            )
+        print(f'Trial number {n + 1}.')
+        print(f'Final point: X = {np.round(result, decimals=2)[0]}')
+        print(f'q(X) = {np.round(FUNCTION(result), decimals=2)}')
+        print(f'Time taken: {np.round(time, decimals=5)} s')
+        all_values.append(values)
+        all_iterations.append(iterations)
+    plt.title(f'Step parameter = {BETA}')
+    plot_results(all_values, all_iterations, False)
 
 
 if __name__ == "__main__":
