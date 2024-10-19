@@ -23,6 +23,7 @@ def solver(
     values = []
     start = time()
     for n in range(1, iterations + 1):
+        previous_x = x
         gradient = gradient_func(f, x, epsilon)
         y = f(x)
         values.append(y)
@@ -30,6 +31,8 @@ def solver(
         x = np.clip(x, -max_bound, max_bound)
         if (
             (np.linalg.norm(gradient) <= epsilon)
+            or
+            (np.linalg.norm(x - previous_x) <= epsilon)
         ):
             end = time()
             print(f'Solution found in {n} iterations.')
