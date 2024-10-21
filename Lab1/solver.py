@@ -5,7 +5,7 @@ from copy import deepcopy
 
 def gradient_func(f, x, epsilon):
     H = epsilon
-    y  = f(x)
+    y = f(x)
     dimensions = len(x[0])
     gradient_value = np.zeros(dimensions)
     for n in range(dimensions):
@@ -14,7 +14,6 @@ def gradient_func(f, x, epsilon):
         derivative = (f(xn) - y) / H
         gradient_value[n] = derivative
     return gradient_value
-
 
 
 def solver(

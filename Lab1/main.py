@@ -22,17 +22,24 @@ def plot_results(values, iterations, semilogy=True):
             plt.semilogy(range(iterations[n]), values[n])
         else:
             plt.plot(range(iterations[n]), values[n])
-    plt.ylabel('q(xt) - function value for iteration')
-    plt.xlabel('t - iteration number')
+    plt.ylabel(
+        'q(xt) - function value for iteration',
+        fontweight='bold', fontsize=16.0
+        )
+    plt.xlabel('t - iteration number', fontweight='bold', fontsize=16.0)
     plt.show()
 
 
 def main():
-    BETA = 0.001
+    FUNCTION_NAME = {
+        quadriatic: "Quadriatic Function",
+        my_f12: "F12", my_f3: "F3"
+        }
+    BETA = 1e-8
     EPSILON = 1e-6
     MAX_ITERATIONS = 10000
     MAX_BOUND = 100
-    FUNCTION = quadriatic
+    FUNCTION = my_f3
     TRIALS = 5
 
     all_values = []
@@ -49,8 +56,8 @@ def main():
         print(f'Time taken: {np.round(time, decimals=5)} s')
         all_values.append(values)
         all_iterations.append(iterations)
-    plt.title(f'Step parameter = {BETA}')
-    plot_results(all_values, all_iterations, False)
+    plt.title(f'{FUNCTION_NAME[FUNCTION]}. Beta = {BETA}')
+    plot_results(all_values, all_iterations, True)
 
 
 if __name__ == "__main__":
