@@ -27,7 +27,6 @@ def plot_results(values, iterations, semilogy=True):
         fontweight='bold', fontsize=16.0
         )
     plt.xlabel('t - iteration number', fontweight='bold', fontsize=16.0)
-    plt.show()
 
 
 def main():
@@ -37,10 +36,10 @@ def main():
         }
     BETA = 1e-8
     EPSILON = 1e-6
-    MAX_ITERATIONS = 10000
+    MAX_ITERATIONS = 1500
     MAX_BOUND = 100
     FUNCTION = my_f3
-    TRIALS = 5
+    TRIALS = 3
 
     all_values = []
     all_iterations = []
@@ -58,6 +57,8 @@ def main():
         all_iterations.append(iterations)
     plt.title(f'{FUNCTION_NAME[FUNCTION]}. Beta = {BETA}')
     plot_results(all_values, all_iterations, True)
+    plt.savefig(f'graphs/{FUNCTION_NAME[FUNCTION]}_{BETA}.png')
+    plt.show()
 
 
 if __name__ == "__main__":
