@@ -16,9 +16,7 @@ def gradient_func(f, x, epsilon):
     return gradient_value
 
 
-def solver(
-        f, x, beta, epsilon, iterations, max_bound
-):
+def solver(f, x, beta, epsilon, iterations, max_bound):
     values = []
     start = time()
     for n in range(1, iterations + 1):
@@ -28,13 +26,11 @@ def solver(
         values.append(y)
         x = x - gradient * beta
         x = np.clip(x, -max_bound, max_bound)
-        if (
-            (np.linalg.norm(gradient) <= epsilon)
-            or
-            (np.linalg.norm(x - previous_x) <= epsilon)
+        if (np.linalg.norm(gradient) <= epsilon) or (
+            np.linalg.norm(x - previous_x) <= epsilon
         ):
             end = time()
-            print(f'Solution found in {n} iterations.')
+            print(f"Solution found in {n} iterations.")
             return x, n, values, end - start
     print("Solution not found.")
     end = time()
