@@ -18,9 +18,9 @@ def quadriatic(x):
 
 def main():
     FUNCTION_NAMES = {quadriatic: "Quadriatic function", my_f3: "F3", my_f7: "F7"}
-    MUTATION_STRENGTH = 1.1
+    MUTATION_STRENGTH = 1.5
     MAX_BOUND = 100
-    ADAPTAION_INTERVAL = 4
+    ADAPTAION_INTERVAL = 5
     MAX_ITERATIONS = 1000
     FUNCTION = my_f3
 
@@ -31,7 +31,7 @@ def main():
     plt.scatter(range(MAX_ITERATIONS + 1), all_scores, s=2, c='orange')
     plt.yscale('log')
     plt.title(
-        f'{FUNCTION_NAMES[FUNCTION]}. Sigma = {MUTATION_STRENGTH}. Adaptation interval = {ADAPTAION_INTERVAL}.',
+        f'{FUNCTION_NAMES[FUNCTION]} Sigma = {MUTATION_STRENGTH} Adaptation interval = {ADAPTAION_INTERVAL}',
         fontweight='bold'
         )
     plt.ylabel("q(xt) - function value for iteration", fontweight="bold", fontsize=16.0)
