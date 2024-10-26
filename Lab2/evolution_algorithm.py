@@ -10,7 +10,6 @@ def solver(
     success_counter = 0
     current_score = q(x)
     scores = []
-    scores.append(current_score)
     while t <= max_iterations:
         mutant = x + mutation_strength * np.random.normal(0, 1, len(x[0]))
         mutant_score = q(mutant)
