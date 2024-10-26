@@ -7,7 +7,7 @@ from typing import Callable
 
 @dataclass
 class AlgorithmParamiters:
-    function_param: Callable
+    function: Callable
     starting_point: np.array
     mutation_strength: float
     adaptaion_interval: int
@@ -31,7 +31,7 @@ def calculate_and_plot_deviations(trials, algorithm_paramiters):
     all_scores = []
     for _ in range(trials):
         _, score, _ = EA(
-        algorithm_paramiters.function_param, algorithm_paramiters.starting_point,
+        algorithm_paramiters.function, algorithm_paramiters.starting_point,
         algorithm_paramiters.mutation_strength, algorithm_paramiters.adaptaion_interval,
         algorithm_paramiters.max_iterations
         )
@@ -41,18 +41,18 @@ def calculate_and_plot_deviations(trials, algorithm_paramiters):
 
     plt.hist(all_scores, bins=10, color='skyblue', edgecolor='black', alpha=0.7)
     plt.axvline(mean, color='red', linestyle='dashed', linewidth=1, label=f'Średnia = {mean:.2f}')
-    plt.axvline(mean - std_deviation, color='orange', linestyle='dotted', linewidth=1, label=f'-1σ = {mean - std_deviation:.2f}')
-    plt.axvline(mean + std_deviation, color='orange', linestyle='dotted', linewidth=1, label=f'+1σ = {mean - std_deviation:.2f}')
+    plt.axvline(mean - std_deviation, color='orange', linestyle='dotted', linewidth=2, label=f'-1σ = {mean - std_deviation:.2f}')
+    plt.axvline(mean + std_deviation, color='orange', linestyle='dotted', linewidth=2, label=f'+1σ = {mean - std_deviation:.2f}')
     plt.xlabel('Algorithm scores', fontweight='bold')
     plt.ylabel('Frequency', fontweight='bold')
-    plt.legend()
+    plt.legend(prop={'weight': 'bold'})
     plt.show()
     plt.clf()
 
 
 def plot_results(algorithm_paramiters):
     result, score, all_evals = EA(
-        algorithm_paramiters.function_param, algorithm_paramiters.starting_point,
+        algorithm_paramiters.function, algorithm_paramiters.starting_point,
         algorithm_paramiters.mutation_strength, algorithm_paramiters.adaptaion_interval,
         algorithm_paramiters.max_iterations
         )
@@ -60,7 +60,7 @@ def plot_results(algorithm_paramiters):
     print(f'Score: q(X) = {np.round(score, 8)}')
     plt.scatter(range(algorithm_paramiters.max_iterations + 1), all_evals, s=2, c='orange')
     plt.yscale('log')
-    function_name = algorithm_paramiters.function_names[algorithm_paramiters.function_param]
+    function_name = algorithm_paramiters.function_names[algorithm_paramiters.function]
     mutation_strength = algorithm_paramiters.mutation_strength
     adaptaion_interval = algorithm_paramiters.adaptaion_interval
     plt.title(
