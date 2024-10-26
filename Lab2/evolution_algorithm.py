@@ -1,7 +1,11 @@
 import numpy as np
+from typing import Callable
 
 
-def solver(q, x, mutation_strength, adaptaion_interval, max_iterations):
+def solver(
+        q: Callable, x: np.array, mutation_strength: float,
+        adaptaion_interval: int, max_iterations: int
+        ):
     t = 1
     success_counter = 0
     current_score = q(x)
