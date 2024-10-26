@@ -29,7 +29,7 @@ def quadriatic(x):
 
 def calculate_and_plot_deviations(trials, algorithm_paramiters):
     all_scores = []
-    for _ in range(50):
+    for _ in range(trials):
         _, score, _ = EA(
         algorithm_paramiters.function_param, algorithm_paramiters.starting_point,
         algorithm_paramiters.mutation_strength, algorithm_paramiters.adaptaion_interval,
