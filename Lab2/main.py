@@ -1,9 +1,9 @@
-from evolution_algorithm import solver as es, EvolutionaryAlgorithmParamiters
+from evolution_algorithm import solver as es, EsStrategyParamiters
 from cec2017.functions import f3, f7
 import numpy as np
 from matplotlib import pyplot as plt
 from typing import Callable
-from gradient_descent import solver as sgd, GradientDescentParamiters
+from gradient_descent import solver as sgd, SGDParamiters
 from scipy.stats import wilcoxon
 
 
@@ -56,23 +56,7 @@ def plot_mean_results(params, trials):
         label=f'ES(1+1) Mean value from {trials} trials', s=2)
 
 
-def plot_gradient_descent(params):
-    _, iterations, values = sgd(params)
-    plt.scatter(range(iterations), values, label='SGD', s=2, c='orange')
-    plt.yscale('log')
-
-
-def main():
-    MAX_BOUND = 100
-    starting_point = np.random.uniform(-MAX_BOUND, MAX_BOUND, size=(1, 10))
-    es_params = EvolutionaryAlgorithmParamiters(
-        my_f3, starting_point,
-        1.5, 5, 1000, {quadriatic: "Quadriatic function", my_f3: "F3", my_f7: "F7"}
-    )
-    grad_params = GradientDescentParamiters(
-        my_f3, starting_point, 1e-8, 1e-6, 1000, MAX_BOUND
-    )
-    trials = 50
+def test_wilcoxon(trials: int, es_params: EsStrategyParamiters, grad_params):
     results_sgd = []
     results_es = []
     for _ in range(trials):
@@ -80,10 +64,24 @@ def main():
         results_sgd.append(all_values[-1])
         _, result_es, _ = es(es_params)
         results_es.append(result_es)
-        starting_point = np.random.uniform(-MAX_BOUND, MAX_BOUND, size=(1, 10))
+        starting_point = np.random.uniform(es_params.max_bound, es_params.max_bound, size=(1, 10))
         es_params.starting_point = starting_point
         grad_params.starting_point = starting_point
     statistic, p_value = wilcoxon(results_es, results_sgd)
+    return statistic, p_value
+
+
+def main():
+    MAX_BOUND = 100
+    starting_point = np.random.uniform(-MAX_BOUND, MAX_BOUND, size=(1, 10))
+    es_params = EsStrategyParamiters(
+        my_f3, starting_point,
+        1.5, 5, 1000, {quadriatic: "Quadriatic function", my_f3: "F3", my_f7: "F7"}
+    )
+    grad_params = SGDParamiters(
+        my_f3, starting_point, 1e-8, 1e-6, 1000, MAX_BOUND
+    )
+    statistic, p_value = test_wilcoxon(50, es_params, grad_params)
     print("Test statistics:", statistic)
     print("P value:", p_value)
 

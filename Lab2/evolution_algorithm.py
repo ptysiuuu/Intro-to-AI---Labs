@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class EvolutionaryAlgorithmParamiters:
+class EsStrategyParamiters:
     function: Callable
     starting_point: np.array
     mutation_strength: float
@@ -13,7 +13,7 @@ class EvolutionaryAlgorithmParamiters:
     function_names: dict
 
 
-def solver(params: EvolutionaryAlgorithmParamiters):
+def solver(params: EsStrategyParamiters):
     t = 1
     x = params.starting_point
     success_counter = 0

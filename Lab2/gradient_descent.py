@@ -5,7 +5,7 @@ from typing import Callable
 
 
 @dataclass
-class GradientDescentParamiters:
+class SGDParamiters:
     function: Callable
     starting_point: np.array
     beta: float
@@ -27,7 +27,7 @@ def gradient_func(f, x, epsilon):
     return gradient_value
 
 
-def solver(params: GradientDescentParamiters):
+def solver(params: SGDParamiters):
     values = []
     x = params.starting_point
     for n in range(1, params.iterations + 1):
