@@ -39,17 +39,17 @@ def plot_results(params: EsStrategyParamiters):
 
 def plot_mean_results(params: EsStrategyParamiters, trials: int):
     all_trials = np.zeros((trials, params.max_iterations))
+    function_name = params.function_names[params.function]
+    mutation_strength = params.mutation_strength
+    adaptation_interval = params.adaptaion_interval
     for trial in range(trials):
         _, _, scores = es(params)
         all_trials[trial, :] = scores
     mean = np.mean(all_trials, axis=0)
-    function_name = params.function_names[params.function]
-    mutation_strength = params.mutation_strength
-    adaptaion_interval = params.adaptaion_interval
     if params.function != quadriatic:
         plt.yscale('log')
     plt.title(
-        f'{function_name}, sigma = {mutation_strength} a = {adaptaion_interval}',
+        f'{function_name}, sigma = {mutation_strength} a = {adaptation_interval}',
         fontweight='bold'
         )
     plt.ylabel("q(xt) - function value for iteration", fontweight="bold", fontsize=16.0)
@@ -78,11 +78,11 @@ def main():
     MAX_BOUND = 100
     starting_point = np.random.uniform(-MAX_BOUND, MAX_BOUND, size=(1, 10))
     es_params = EsStrategyParamiters(
-        my_f7, starting_point,
-        1.5, 10, 1000, {quadriatic: "Quadriatic function", my_f3: "F3", my_f7: "F7"}
+        quadriatic, starting_point,
+        1, 10, 1000, {quadriatic: "Quadriatic function", my_f3: "F3", my_f7: "F7"}
     )
     grad_params = SGDParamiters(
-        my_f7, starting_point, 1e-8, 1e-6, 1000, MAX_BOUND
+        my_f3, starting_point, 1e-8, 1e-6, 1000, MAX_BOUND
     )
     plot_mean_results(es_params, 50)
     plt.show()
