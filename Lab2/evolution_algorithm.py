@@ -6,7 +6,7 @@ from dataclasses import dataclass
 @dataclass
 class EsStrategyParamiters:
     function: Callable
-    starting_point: np.array
+    starting_point: np.object_
     mutation_strength: float
     adaptaion_interval: int
     max_iterations: int

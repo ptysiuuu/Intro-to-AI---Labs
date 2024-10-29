@@ -7,7 +7,7 @@ from typing import Callable
 @dataclass
 class SGDParamiters:
     function: Callable
-    starting_point: np.array
+    starting_point: np.object_
     beta: float
     epsilon: float
     iterations: int

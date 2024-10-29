@@ -24,7 +24,8 @@ def plot_results(params: EsStrategyParamiters):
     print(f'Result point X = {np.round(result[0], 8)}')
     print(f'Score: q(X) = {np.round(score, 8)}')
     plt.scatter(range(params.max_iterations), all_evals, s=2, c='orange')
-    plt.yscale('log')
+    if params.function != quadriatic:
+        plt.yscale('log')
     function_name = params.function_names[params.function]
     mutation_strength = params.mutation_strength
     adaptaion_interval = params.adaptaion_interval
@@ -45,15 +46,17 @@ def plot_mean_results(params: EsStrategyParamiters, trials: int):
     function_name = params.function_names[params.function]
     mutation_strength = params.mutation_strength
     adaptaion_interval = params.adaptaion_interval
+    if params.function != quadriatic:
+        plt.yscale('log')
     plt.title(
-        f'{function_name}, mutation strength = {mutation_strength} adaptation interval = {adaptaion_interval}',
+        f'{function_name}, sigma = {mutation_strength} a = {adaptaion_interval}',
         fontweight='bold'
         )
     plt.ylabel("q(xt) - function value for iteration", fontweight="bold", fontsize=16.0)
     plt.xlabel("t - iteration number", fontweight="bold", fontsize=16.0)
     plt.scatter(
         range(params.max_iterations), mean,
-        label=f'ES(1+1) Mean value from {trials} trials', s=2)
+        label=f'ES(1+1) Mean value from {trials} trials', s=0.5, c='orange')
 
 
 def test_wilcoxon(trials: int, es_params: EsStrategyParamiters, grad_params: SGDParamiters):
@@ -62,7 +65,7 @@ def test_wilcoxon(trials: int, es_params: EsStrategyParamiters, grad_params: SGD
     for _ in range(trials):
         _, _, all_values = sgd(grad_params)
         results_sgd.append(all_values[-1])
-        _, result_es, _ = es(es_params)
+        _, result_es, _= es(es_params)
         results_es.append(result_es)
         starting_point = np.random.uniform(grad_params.max_bound, grad_params.max_bound, size=(1, 10))
         es_params.starting_point = starting_point
@@ -75,15 +78,14 @@ def main():
     MAX_BOUND = 100
     starting_point = np.random.uniform(-MAX_BOUND, MAX_BOUND, size=(1, 10))
     es_params = EsStrategyParamiters(
-        my_f3, starting_point,
-        1.5, 5, 1000, {quadriatic: "Quadriatic function", my_f3: "F3", my_f7: "F7"}
+        my_f7, starting_point,
+        1.5, 10, 1000, {quadriatic: "Quadriatic function", my_f3: "F3", my_f7: "F7"}
     )
     grad_params = SGDParamiters(
-        my_f3, starting_point, 1e-8, 1e-6, 1000, MAX_BOUND
+        my_f7, starting_point, 1e-8, 1e-6, 1000, MAX_BOUND
     )
-    statistic, p_value = test_wilcoxon(50, es_params, grad_params)
-    print("Test statistics:", statistic)
-    print("P value:", p_value)
+    plot_mean_results(es_params, 50)
+    plt.show()
 
 
 if __name__ == "__main__":
