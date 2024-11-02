@@ -16,10 +16,10 @@ class SGDParamiters:
 
     def get_desc(self):
         func_name = self.function_names[self.function]
-        return f'SGD Function: {func_name}, Beta: {self.beta}'
-    
+        return f"SGD Function: {func_name}, Beta: {self.beta}"
+
     def get_label(self):
-        return 'SGD'
+        return "SGD"
 
 
 def gradient_func(f, x, epsilon):
@@ -36,9 +36,9 @@ def gradient_func(f, x, epsilon):
 
 
 def solver(params: SGDParamiters):
-    '''
+    """
     SGD solver without stop conditions in order to compare it to ES solver.
-    '''
+    """
     values = []
     x = params.starting_point
     for _ in range(1, params.max_iterations + 1):

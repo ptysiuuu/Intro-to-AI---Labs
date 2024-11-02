@@ -15,10 +15,10 @@ class EsStrategyParamiters:
 
     def get_desc(self):
         func_name = self.function_names[self.function]
-        return f'ES Function: {func_name}, sigma = {self.mutation_strength}, a = {self.adaptaion_interval}'
-    
+        return f"ES Function: {func_name}, sigma = {self.mutation_strength}, a = {self.adaptaion_interval}"
+
     def get_label(self):
-        return 'ES(1+1)'
+        return "ES(1+1)"
 
 
 def solver(params: EsStrategyParamiters):
