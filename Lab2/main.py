@@ -56,7 +56,7 @@ def plot_mean_results(params: EsStrategyParamiters, trials: int):
     plt.xlabel("t - iteration number", fontweight="bold", fontsize=16.0)
     plt.scatter(
         range(params.max_iterations), mean,
-        label=f'ES(1+1) Mean value from {trials} trials', s=0.5, c='orange')
+        label=f'ES(1+1) Mean value from {trials} trials', s=0.1, c='orange')
 
 
 def test_wilcoxon(trials: int, es_params: EsStrategyParamiters, grad_params: SGDParamiters):
