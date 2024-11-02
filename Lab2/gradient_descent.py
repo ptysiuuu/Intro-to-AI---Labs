@@ -28,17 +28,15 @@ def gradient_func(f, x, epsilon):
 
 
 def solver(params: SGDParamiters):
+    '''
+    SGD solver without stop conditions in order to compare it to ES solver.
+    '''
     values = []
     x = params.starting_point
-    for n in range(1, params.iterations + 1):
-        previous_x = x
+    for _ in range(1, params.iterations + 1):
         gradient = gradient_func(params.function, x, params.epsilon)
         y = params.function(x)
         values.append(y)
         x = x - gradient * params.beta
         x = np.clip(x, -params.max_bound, params.max_bound)
-        if (np.linalg.norm(gradient) <= params.epsilon) or (
-            np.linalg.norm(x - previous_x) <= params.epsilon
-        ):
-            return x, n, values
     return x, params.iterations, values

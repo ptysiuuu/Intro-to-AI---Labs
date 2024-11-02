@@ -2,7 +2,6 @@ from evolution_algorithm import solver as es, EsStrategyParamiters
 from cec2017.functions import f3, f7
 import numpy as np
 from matplotlib import pyplot as plt
-from typing import Callable
 from gradient_descent import solver as sgd, SGDParamiters
 from scipy.stats import wilcoxon
 
@@ -38,6 +37,9 @@ def plot_results(params: EsStrategyParamiters):
 
 
 def plot_mean_results(params: EsStrategyParamiters, trials: int):
+    '''
+    Plots mean values of points visited by ES(1+1) 1/5 strategy over given amount of trials.s
+    '''
     all_trials = np.zeros((trials, params.max_iterations))
     function_name = params.function_names[params.function]
     mutation_strength = params.mutation_strength
@@ -56,10 +58,14 @@ def plot_mean_results(params: EsStrategyParamiters, trials: int):
     plt.xlabel("t - iteration number", fontweight="bold", fontsize=16.0)
     plt.scatter(
         range(params.max_iterations), mean,
-        label=f'ES(1+1) Mean value from {trials} trials', s=0.1, c='orange')
+        label=f'ES(1+1) Mean value, {trials} trials', s=0.5, c='orange')
 
 
 def test_wilcoxon(trials: int, es_params: EsStrategyParamiters, grad_params: SGDParamiters):
+    '''
+    Computes the wilcoxon test between the results of function optimalization of SGD and ES.
+    Trials represents the amount of samples taken to consideration.
+    '''
     results_sgd = []
     results_es = []
     for _ in range(trials):
@@ -74,17 +80,28 @@ def test_wilcoxon(trials: int, es_params: EsStrategyParamiters, grad_params: SGD
     return statistic, p_value
 
 
+def plot_es_vs_sgd(trials: int, es_params: EsStrategyParamiters, grad_params: SGDParamiters):
+    plot_mean_results(es_params, trials)
+    _, _, results = sgd(grad_params)
+    plt.scatter(range(grad_params.iterations), results, s=0.5, c='blue', label='SGD')
+    plt.title('ES(1+1) vs SGD', fontweight='bold')
+    plt.legend()
+
+
 def main():
     MAX_BOUND = 100
     starting_point = np.random.uniform(-MAX_BOUND, MAX_BOUND, size=(1, 10))
     es_params = EsStrategyParamiters(
-        quadriatic, starting_point,
+        my_f3, starting_point,
         1, 10, 1000, {quadriatic: "Quadriatic function", my_f3: "F3", my_f7: "F7"}
     )
     grad_params = SGDParamiters(
         my_f3, starting_point, 1e-8, 1e-6, 1000, MAX_BOUND
     )
-    plot_mean_results(es_params, 50)
+    statistics, p_value = test_wilcoxon(50, es_params, grad_params)
+    print('Statistics:', statistics)
+    print('P value:', p_value)
+    plot_es_vs_sgd(50, es_params, grad_params)
     plt.show()
 
 
