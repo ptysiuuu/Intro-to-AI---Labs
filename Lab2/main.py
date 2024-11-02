@@ -3,6 +3,7 @@ from cec2017.functions import f3, f7
 import numpy as np
 from matplotlib import pyplot as plt
 from gradient_descent import solver as sgd, SGDParamiters
+from typing import Callable
 from scipy.stats import wilcoxon
 
 
@@ -36,29 +37,27 @@ def plot_results(params: EsStrategyParamiters):
     plt.xlabel("t - iteration number", fontweight="bold", fontsize=16.0)
 
 
-def plot_mean_results(params: EsStrategyParamiters, trials: int):
+def plot_mean_results(params: EsStrategyParamiters | SGDParamiters, trials: int, algorithm: Callable):
     '''
-    Plots mean values of points visited by ES(1+1) 1/5 strategy over given amount of trials.s
+    Plots mean values of points visited by ES(1+1) 1/5 or SGD strategy over given amount of trials.
     '''
     all_trials = np.zeros((trials, params.max_iterations))
-    function_name = params.function_names[params.function]
-    mutation_strength = params.mutation_strength
-    adaptation_interval = params.adaptaion_interval
     for trial in range(trials):
-        _, _, scores = es(params)
+        _, _, scores = algorithm(params)
         all_trials[trial, :] = scores
     mean = np.mean(all_trials, axis=0)
     if params.function != quadriatic:
         plt.yscale('log')
-    plt.title(
-        f'{function_name}, sigma = {mutation_strength} a = {adaptation_interval}',
-        fontweight='bold'
-        )
+    plt.title(params.get_desc(), fontweight='bold')
     plt.ylabel("q(xt) - function value for iteration", fontweight="bold", fontsize=16.0)
     plt.xlabel("t - iteration number", fontweight="bold", fontsize=16.0)
+    if params.get_label() == 'ES(1+1)':
+        color = 'orange'
+    else:
+        color = 'blue'
     plt.scatter(
         range(params.max_iterations), mean,
-        label=f'ES(1+1) Mean value, {trials} trials', s=0.5, c='orange')
+        label=f'{params.get_label()}, {trials} trials', s=0.5, c=color)
 
 
 def test_wilcoxon(trials: int, es_params: EsStrategyParamiters, grad_params: SGDParamiters):
@@ -81,9 +80,8 @@ def test_wilcoxon(trials: int, es_params: EsStrategyParamiters, grad_params: SGD
 
 
 def plot_es_vs_sgd(trials: int, es_params: EsStrategyParamiters, grad_params: SGDParamiters):
-    plot_mean_results(es_params, trials)
-    _, _, results = sgd(grad_params)
-    plt.scatter(range(grad_params.iterations), results, s=0.5, c='blue', label='SGD')
+    plot_mean_results(es_params, trials, es)
+    plot_mean_results(grad_params, trials, sgd)
     plt.title('ES(1+1) vs SGD', fontweight='bold')
     plt.legend()
 
@@ -96,11 +94,9 @@ def main():
         1, 10, 1000, {quadriatic: "Quadriatic function", my_f3: "F3", my_f7: "F7"}
     )
     grad_params = SGDParamiters(
-        my_f3, starting_point, 1e-8, 1e-6, 1000, MAX_BOUND
+        my_f3, starting_point, 1e-8, 1e-6, 1000, MAX_BOUND,
+        {quadriatic: "Quadriatic function", my_f3: "F3", my_f7: "F7"}
     )
-    statistics, p_value = test_wilcoxon(50, es_params, grad_params)
-    print('Statistics:', statistics)
-    print('P value:', p_value)
     plot_es_vs_sgd(50, es_params, grad_params)
     plt.show()
 

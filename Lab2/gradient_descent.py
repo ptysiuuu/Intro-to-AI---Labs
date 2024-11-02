@@ -10,8 +10,16 @@ class SGDParamiters:
     starting_point: np.object_
     beta: float
     epsilon: float
-    iterations: int
+    max_iterations: int
     max_bound: float
+    function_names: dict
+
+    def get_desc(self):
+        func_name = self.function_names[self.function]
+        return f'SGD Function: {func_name}, Beta: {self.beta}'
+    
+    def get_label(self):
+        return 'SGD'
 
 
 def gradient_func(f, x, epsilon):
@@ -33,10 +41,10 @@ def solver(params: SGDParamiters):
     '''
     values = []
     x = params.starting_point
-    for _ in range(1, params.iterations + 1):
+    for _ in range(1, params.max_iterations + 1):
         gradient = gradient_func(params.function, x, params.epsilon)
         y = params.function(x)
         values.append(y)
         x = x - gradient * params.beta
         x = np.clip(x, -params.max_bound, params.max_bound)
-    return x, params.iterations, values
+    return x, params.max_iterations, values
