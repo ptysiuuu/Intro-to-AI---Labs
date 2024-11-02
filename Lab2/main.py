@@ -19,20 +19,14 @@ def quadriatic(x: np.array):
     return np.sum(x ** 2)
 
 
-def plot_results(params: EsStrategyParamiters):
+def plot_results(params: EsStrategyParamiters | SGDParamiters):
     result, score, all_evals = es(params)
     print(f'Result point X = {np.round(result[0], 8)}')
     print(f'Score: q(X) = {np.round(score, 8)}')
     plt.scatter(range(params.max_iterations), all_evals, s=2, c='orange')
     if params.function != quadriatic:
         plt.yscale('log')
-    function_name = params.function_names[params.function]
-    mutation_strength = params.mutation_strength
-    adaptaion_interval = params.adaptaion_interval
-    plt.title(
-        f'{function_name} Sigma = {mutation_strength} Adaptation interval = {adaptaion_interval}',
-        fontweight='bold'
-        )
+    plt.title(params.get_desc(), fontweight='bold')
     plt.ylabel("q(xt) - function value for iteration", fontweight="bold", fontsize=16.0)
     plt.xlabel("t - iteration number", fontweight="bold", fontsize=16.0)
 
@@ -57,7 +51,7 @@ def plot_mean_results(params: EsStrategyParamiters | SGDParamiters, trials: int,
         color = 'blue'
     plt.scatter(
         range(params.max_iterations), mean,
-        label=f'{params.get_label()}, {trials} trials', s=0.5, c=color)
+        label=f'{params.get_label()}, {trials} trials mean.', s=0.5, c=color)
 
 
 def test_wilcoxon(trials: int, es_params: EsStrategyParamiters, grad_params: SGDParamiters):
@@ -82,8 +76,9 @@ def test_wilcoxon(trials: int, es_params: EsStrategyParamiters, grad_params: SGD
 def plot_es_vs_sgd(trials: int, es_params: EsStrategyParamiters, grad_params: SGDParamiters):
     plot_mean_results(es_params, trials, es)
     plot_mean_results(grad_params, trials, sgd)
-    plt.title('ES(1+1) vs SGD', fontweight='bold')
-    plt.legend()
+    func_name = es_params.function_names[es_params.function]
+    plt.title(f'ES(1+1) vs SGD, {func_name}', fontweight='bold')
+    plt.legend(prop={'weight': 'bold'})
 
 
 def main():
@@ -91,13 +86,16 @@ def main():
     starting_point = np.random.uniform(-MAX_BOUND, MAX_BOUND, size=(1, 10))
     es_params = EsStrategyParamiters(
         my_f3, starting_point,
-        1, 10, 1000, {quadriatic: "Quadriatic function", my_f3: "F3", my_f7: "F7"}
+        1, 10, 3000, {quadriatic: "Quadriatic function", my_f3: "F3", my_f7: "F7"}
     )
     grad_params = SGDParamiters(
-        my_f3, starting_point, 1e-8, 1e-6, 1000, MAX_BOUND,
+        my_f3, starting_point, 1e-8, 1e-6, 3000, MAX_BOUND,
         {quadriatic: "Quadriatic function", my_f3: "F3", my_f7: "F7"}
     )
-    plot_es_vs_sgd(50, es_params, grad_params)
+    plot_es_vs_sgd(20, es_params, grad_params)
+    statistics, p_value = test_wilcoxon(20, es_params, grad_params)
+    print('Statistics:', statistics)
+    print('P value:', p_value)
     plt.show()
 
 
