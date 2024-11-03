@@ -101,7 +101,7 @@ def main():
         starting_point,
         1,
         5,
-        3000,
+        1000,
         {quadriatic: "Quadriatic function", my_f3: "F3", my_f7: "F7"},
     )
     grad_params = SGDParamiters(
@@ -113,8 +113,9 @@ def main():
         MAX_BOUND,
         {quadriatic: "Quadriatic function", my_f3: "F3", my_f7: "F7"},
     )
-    plot_es_vs_sgd(20, es_params, grad_params)
-    plt.show()
+    stats, p = test_wilcoxon(20, es_params, grad_params)
+    print('Statistics =', stats)
+    print('P value =', p)
 
 
 if __name__ == "__main__":
