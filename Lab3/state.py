@@ -9,7 +9,7 @@ class IncorrectMove(Exception):
 class State:
     def __init__(
         self,
-        board=[["", "", ""], ["", "", ""], ["", "", ""]],
+        board=[[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]],
         max_move=True,
     ):
         self.board = board
@@ -18,7 +18,7 @@ class State:
     def apply_move(self, cords: tuple, player: Literal["X", "O"]):
         n = cords[0]
         p = cords[1]
-        if self.board[n][p]:
+        if self.board[n][p] != " ":
             raise IncorrectMove("This move is impossible")
         else:
             new_board = deepcopy(self.board)
@@ -29,7 +29,7 @@ class State:
         all_moves = []
         for i in range(3):
             for j in range(3):
-                if not self.board[i][j]:
+                if self.board[i][j] == " ":
                     all_moves.append((i, j))
         return all_moves
 
@@ -50,7 +50,7 @@ class State:
         if self.check_winner("X") or self.check_winner("O"):
             return True
 
-        if all(cell != "" for row in self.board for cell in row):
+        if all(cell != " " for row in self.board for cell in row):
             return True
 
         return False
