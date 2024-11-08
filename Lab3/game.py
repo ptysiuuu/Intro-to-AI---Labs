@@ -25,3 +25,9 @@ class Game:
             self.make_move()
             self.display_board()
             sleep(2)
+        if self.game_state.evaluate_board() == 1:
+            print('O Won!')
+        elif self.game_state.evaluate_board() == -1:
+            print('X Won!')
+        else:
+            print('Draw!')
