@@ -18,14 +18,14 @@ def minimax(params: MinimaxParameters):
     best_move = None
 
     if params.s.max_move:
-        max_eval = float('-inf')
+        max_eval = float("-inf")
         player = "O"
         for move in possible_moves:
             iter_params = MinimaxParameters(
                 params.s.apply_move(move, player),
                 params.d - 1,
                 params.alfa,
-                params.beta
+                params.beta,
             )
             eval, _ = minimax(iter_params)
             if eval > max_eval:
@@ -36,14 +36,14 @@ def minimax(params: MinimaxParameters):
                 break
         return max_eval, best_move
     else:
-        min_eval = float('inf')
+        min_eval = float("inf")
         player = "X"
         for move in possible_moves:
             iter_params = MinimaxParameters(
                 params.s.apply_move(move, player),
                 params.d - 1,
                 params.alfa,
-                params.beta
+                params.beta,
             )
             eval, _ = minimax(iter_params)
             if eval < min_eval:

@@ -9,7 +9,7 @@ class IncorrectMove(Exception):
 class State:
     def __init__(
         self,
-        board=[['', '', ''], ['', '', ''], ['', '', '']],
+        board=[["", "", ""], ["", "", ""], ["", "", ""]],
         max_move=True,
     ):
         self.board = board
@@ -50,7 +50,7 @@ class State:
         if self.check_winner("X") or self.check_winner("O"):
             return True
 
-        if all(cell != '' for row in self.board for cell in row):
+        if all(cell != "" for row in self.board for cell in row):
             return True
 
         return False
