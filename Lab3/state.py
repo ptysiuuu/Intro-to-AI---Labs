@@ -33,7 +33,7 @@ class State:
                     all_moves.append((i, j))
         return all_moves
 
-    def check_winner(self, symbol):
+    def check_winner(self, symbol: Literal["X", "O"]):
         for row in self.board:
             if row == [symbol, symbol, symbol]:
                 return True
