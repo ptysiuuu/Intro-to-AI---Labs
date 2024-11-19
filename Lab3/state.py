@@ -15,7 +15,7 @@ class State:
         self.board = board
         self.max_move = max_move
 
-    def apply_move(self, cords: tuple, player: Literal["X", "O"]):
+    def apply_move(self, cords: tuple[int, int], player: Literal["X", "O"]):
         n = cords[0]
         p = cords[1]
         if self.board[n][p] != " ":
