@@ -1,6 +1,7 @@
 from state import State
 from minimax import minimax, MinimaxParameters
 from time import sleep
+import random
 
 
 class Game:
@@ -15,9 +16,12 @@ class Game:
         print()
 
     def make_move(self):
-        params = MinimaxParameters(self.game_state, 6, float("-inf"), float("inf"))
-        player = "O" if self.game_state.max_move else "X"
-        new_state = self.game_state.apply_move(minimax(params)[1], player)
+        params = MinimaxParameters(self.game_state, 4, float("-inf"), float("inf"))
+        new_state = minimax(params)[1]
+        if new_state is None:
+            player = 'O' if self.game_state.max_move else 'X'
+            move = random.choice(self.game_state.get_possible_moves())
+            new_state = self.game_state.apply_move(move, player)
         self.game_state = new_state
 
     def play(self):

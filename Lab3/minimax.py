@@ -15,7 +15,7 @@ def minimax(params: MinimaxParameters):
         return params.s.evaluate_board(), None
 
     possible_moves = params.s.get_possible_moves()
-    best_move = None
+    best_state = None
 
     if params.s.max_move:
         max_eval = float("-inf")
@@ -27,14 +27,14 @@ def minimax(params: MinimaxParameters):
                 params.alfa,
                 params.beta,
             )
-            eval, _ = minimax(iter_params)
+            eval, state = minimax(iter_params)
             if eval > max_eval:
                 max_eval = eval
-                best_move = move
+                best_state = state
             params.alfa = max(params.alfa, max_eval)
             if params.alfa >= params.beta:
                 break
-        return max_eval, best_move
+        return max_eval, best_state
     else:
         min_eval = float("inf")
         player = "X"
@@ -45,11 +45,11 @@ def minimax(params: MinimaxParameters):
                 params.alfa,
                 params.beta,
             )
-            eval, _ = minimax(iter_params)
+            eval, state = minimax(iter_params)
             if eval < min_eval:
                 min_eval = eval
-                best_move = move
+                best_state = state
             params.beta = min(params.beta, min_eval)
-            if params.beta <= params.alfa:
+            if params.alfa >= params.beta:
                 break
-        return min_eval, best_move
+        return min_eval, best_state
