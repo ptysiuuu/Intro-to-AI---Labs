@@ -57,7 +57,19 @@ class State:
 
     def evaluate_board(self):
         if self.check_winner("O"):
-            return 1
+            return 100
         elif self.check_winner("X"):
-            return -1
-        return 0
+            return -100
+        heuristic_values = [
+            [3, 2, 3],
+            [2, 4, 2],
+            [3, 2, 3]
+            ]
+        total_sum = 0
+        for i in range(3):
+            for j in range(3):
+                if self.board[i][j] == 'O':
+                    total_sum += heuristic_values[i][j]
+                elif self.board[i][j] == 'X':
+                    total_sum -= heuristic_values[i][j]
+        return total_sum

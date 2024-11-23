@@ -16,7 +16,7 @@ class Game:
         print()
 
     def make_move(self):
-        params = MinimaxParameters(self.game_state, 4, float("-inf"), float("inf"))
+        params = MinimaxParameters(self.game_state, 6, float("-inf"), float("inf"))
         new_state = minimax(params)[1]
         if new_state is None:
             player = 'O' if self.game_state.max_move else 'X'
@@ -29,9 +29,9 @@ class Game:
             self.make_move()
             self.display_board()
             sleep(2)
-        if self.game_state.evaluate_board() == 1:
+        if self.game_state.evaluate_board() == 100:
             print('O Won!')
-        elif self.game_state.evaluate_board() == -1:
+        elif self.game_state.evaluate_board() == -100:
             print('X Won!')
         else:
             print('Draw!')

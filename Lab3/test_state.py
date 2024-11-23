@@ -45,13 +45,13 @@ def test_apply_move():
 def test_evaluate_board_min():
     state = State()
     state.board = [["X", "O", "X"], ["O", "X", "O"], ["O", "O", "X"]]
-    assert state.evaluate_board() == -1
+    assert state.evaluate_board() == -100
 
 
 def test_evaluate_board_max():
     state = State()
     state.board = [["X", "O", "X"], ["O", "O", "O"], ["O", "X", "X"]]
-    assert state.evaluate_board() == 1
+    assert state.evaluate_board() == 100
 
 
 def test_evaluate_board_zero():
