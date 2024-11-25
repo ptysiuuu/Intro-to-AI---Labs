@@ -1,4 +1,5 @@
-from state import State
+from state import State, IncorrectMove
+import pytest
 
 
 def test_state_get_possible_moves():
@@ -41,6 +42,10 @@ def test_apply_move():
     new_state = state.apply_move((0, 0), "X")
     assert new_state.board[0][0] == "X"
 
+def test_apply_incorrect_move():
+    state = State()
+    with pytest.raises(IncorrectMove):
+        state.apply_move((3, 3), "X")
 
 def test_evaluate_board_min():
     state = State()

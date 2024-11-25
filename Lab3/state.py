@@ -16,12 +16,15 @@ class State:
     def apply_move(self, cords: tuple[int, int], player: Literal["X", "O"]):
         n = cords[0]
         p = cords[1]
-        if self.board[n][p] != " ":
+        try:
+            if self.board[n][p] != " ":
+                raise IncorrectMove("This move is impossible")
+            else:
+                new_board = deepcopy(self.board)
+                new_board[n][p] = player
+                return State(new_board)
+        except IndexError:
             raise IncorrectMove("This move is impossible")
-        else:
-            new_board = deepcopy(self.board)
-            new_board[n][p] = player
-            return State(new_board)
 
     def get_possible_moves(self):
         all_moves = []
