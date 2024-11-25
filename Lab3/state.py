@@ -9,11 +9,9 @@ class IncorrectMove(Exception):
 class State:
     def __init__(
         self,
-        board=[[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]],
-        max_move=True,
+        board=[[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
     ):
         self.board = board
-        self.max_move = max_move
 
     def apply_move(self, cords: tuple[int, int], player: Literal["X", "O"]):
         n = cords[0]
@@ -23,7 +21,7 @@ class State:
         else:
             new_board = deepcopy(self.board)
             new_board[n][p] = player
-            return State(new_board, not self.max_move)
+            return State(new_board)
 
     def get_possible_moves(self):
         all_moves = []

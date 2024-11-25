@@ -1,12 +1,14 @@
 from state import State
-from minimax import minimax, MinimaxParameters
 from time import sleep
-import random
+from player import Player
 
 
 class Game:
     def __init__(self):
         self.game_state = State()
+        self.max_player = Player(True)
+        self.min_player = Player(False)
+        self.max_next_move = True
 
     def display_board(self):
         for i, row in enumerate(self.game_state.board):
@@ -15,23 +17,26 @@ class Game:
                 print("-" * (len(row) * 4 - 3))
         print()
 
-    def make_move(self):
-        params = MinimaxParameters(self.game_state, 6, float("-inf"), float("inf"))
-        new_state = minimax(params)[1]
-        if new_state is None:
-            player = 'O' if self.game_state.max_move else 'X'
-            move = random.choice(self.game_state.get_possible_moves())
-            new_state = self.game_state.apply_move(move, player)
-        self.game_state = new_state
+    def get_move(self):
+        if self.max_next_move:
+            self.max_next_move = False
+            move = self.max_player.make_move(self.game_state)
+            next_state = self.game_state.apply_move(move, 'O')
+            self.game_state = next_state
+        else:
+            self.max_next_move = True
+            move = self.min_player.make_move(self.game_state)
+            next_state = self.game_state.apply_move(move, 'X')
+            self.game_state = next_state
 
     def play(self):
         while not self.game_state.check_terminal():
-            self.make_move()
+            self.get_move()
             self.display_board()
             sleep(2)
-        if self.game_state.evaluate_board() == 100:
+        if self.game_state.check_winner('O'):
             print('O Won!')
-        elif self.game_state.evaluate_board() == -100:
+        elif self.game_state.check_winner('X'):
             print('X Won!')
         else:
             print('Draw!')
