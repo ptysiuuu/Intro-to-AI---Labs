@@ -7,11 +7,8 @@ class IncorrectMove(Exception):
     pass
 
 
-class State(MinimaxState):
-    def __init__(
-        self,
-        board=[[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
-    ):
+class TicTacToeState(MinimaxState):
+    def __init__(self, board=[[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]):
         self.board = board
 
     def apply_move(self, cords: tuple[int, int], player: Literal["X", "O"]):
@@ -23,7 +20,7 @@ class State(MinimaxState):
             else:
                 new_board = deepcopy(self.board)
                 new_board[n][p] = player
-                return State(new_board)
+                return TicTacToeState(new_board)
         except IndexError:
             raise IncorrectMove("This move is impossible")
 
@@ -62,16 +59,12 @@ class State(MinimaxState):
             return 100
         elif self.check_winner("X"):
             return -100
-        heuristic_values = [
-            [3, 2, 3],
-            [2, 4, 2],
-            [3, 2, 3]
-            ]
+        heuristic_values = [[3, 2, 3], [2, 4, 2], [3, 2, 3]]
         total_sum = 0
         for i in range(3):
             for j in range(3):
-                if self.board[i][j] == 'O':
+                if self.board[i][j] == "O":
                     total_sum += heuristic_values[i][j]
-                elif self.board[i][j] == 'X':
+                elif self.board[i][j] == "X":
                     total_sum -= heuristic_values[i][j]
         return total_sum

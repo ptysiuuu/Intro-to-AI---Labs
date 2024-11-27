@@ -1,11 +1,11 @@
-from state import State
+from state import TicTacToeState
 from time import sleep
 from player import Player
 
 
 class Game:
     def __init__(self):
-        self.game_state = State()
+        self.game_state = TicTacToeState()
         self.max_player = Player(True)
         self.min_player = Player(False)
         self.max_next_move = True
@@ -21,12 +21,12 @@ class Game:
         if self.max_next_move:
             self.max_next_move = False
             move = self.max_player.make_move(self.game_state)
-            next_state = self.game_state.apply_move(move, 'O')
+            next_state = self.game_state.apply_move(move, "O")
             self.game_state = next_state
         else:
             self.max_next_move = True
             move = self.min_player.make_move(self.game_state)
-            next_state = self.game_state.apply_move(move, 'X')
+            next_state = self.game_state.apply_move(move, "X")
             self.game_state = next_state
 
     def play(self):
@@ -34,9 +34,9 @@ class Game:
             self.get_move()
             self.display_board()
             sleep(2)
-        if self.game_state.check_winner('O'):
-            print('O Won!')
-        elif self.game_state.check_winner('X'):
-            print('X Won!')
+        if self.game_state.check_winner("O"):
+            print("O Won!")
+        elif self.game_state.check_winner("X"):
+            print("X Won!")
         else:
-            print('Draw!')
+            print("Draw!")
