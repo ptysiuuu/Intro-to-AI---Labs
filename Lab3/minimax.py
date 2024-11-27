@@ -5,18 +5,33 @@ from abc import abstractmethod, ABC
 class MinimaxState(ABC):
     @abstractmethod
     def evaluate(self):
+        '''
+        This method should return a evaluation of the current state.
+        '''
         pass
 
     @abstractmethod
     def apply_move(self, move, player):
+        '''
+        This method should return a new MinimaxState object,
+        that represents the state after a move by a player is made
+        where move and player are given as arguments.
+        '''
         pass
 
     @abstractmethod
     def get_possible_moves(self):
+        '''
+        This method should return all possible moves that
+        can be applied to the current state.
+        '''
         pass
 
     @abstractmethod
     def check_terminal(self):
+        '''
+        This method should return True if the current state is terminal.
+        '''
         pass
 
 
