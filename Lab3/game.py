@@ -14,7 +14,7 @@ class Game:
         for i, row in enumerate(self.game_state.board):
             print(" | ".join(row))
             if i < len(self.game_state.board) - 1:
-                print("-" * (len(row) * 4 - 3))
+                print("-" * 9)
         print()
 
     def get_move(self):
@@ -33,7 +33,7 @@ class Game:
         while not self.game_state.check_terminal():
             self.get_move()
             self.display_board()
-            sleep(2)
+            sleep(1)
         if self.game_state.check_winner("O"):
             print("O Won!")
         elif self.game_state.check_winner("X"):
