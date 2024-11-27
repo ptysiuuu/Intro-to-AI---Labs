@@ -67,7 +67,7 @@ def minimax(params: MinimaxParameters):
                 max_eval = eval
                 best_move = move
             params.alfa = max(params.alfa, max_eval)
-            if params.alfa >= params.beta:
+            if max_eval >= params.beta:
                 break
         return max_eval, best_move
     else:
@@ -86,6 +86,6 @@ def minimax(params: MinimaxParameters):
                 min_eval = eval
                 best_move = move
             params.beta = min(params.beta, min_eval)
-            if params.alfa >= params.beta:
+            if min_eval <= params.alfa:
                 break
         return min_eval, best_move
