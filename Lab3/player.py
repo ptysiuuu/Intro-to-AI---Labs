@@ -1,6 +1,7 @@
 from state import State
 from minimax import minimax
 from minimax import MinimaxParameters
+import random
 
 
 class Player:
@@ -10,8 +11,7 @@ class Player:
     def make_move(self, state: State):
         if self.is_maximizing:
             params = MinimaxParameters(state, 2, float('-inf'), float('inf'), True)
-            move = minimax(params)[1]
-            return move
-        params = MinimaxParameters(state, 2, float('-inf'), float('inf'), False)
-        move = minimax(params)[1]
+        else:
+            params = MinimaxParameters(state, 2, float('-inf'), float('inf'), False)
+        move = minimax(params)[1] or random.choice(state.get_possible_moves())
         return move
