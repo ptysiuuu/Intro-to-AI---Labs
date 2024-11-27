@@ -1,12 +1,13 @@
 from typing import Literal
 from copy import deepcopy
+from minimax import MinimaxState
 
 
 class IncorrectMove(Exception):
     pass
 
 
-class State:
+class State(MinimaxState):
     def __init__(
         self,
         board=[[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
@@ -56,7 +57,7 @@ class State:
 
         return False
 
-    def evaluate_board(self):
+    def evaluate(self):
         if self.check_winner("O"):
             return 100
         elif self.check_winner("X"):

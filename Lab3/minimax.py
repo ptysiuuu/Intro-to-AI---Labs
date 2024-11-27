@@ -1,9 +1,28 @@
 from dataclasses import dataclass
-from state import State
+from abc import abstractmethod, ABC
+
+
+class MinimaxState(ABC):
+    @abstractmethod
+    def evaluate(self):
+        pass
+
+    @abstractmethod
+    def apply_move(self, move, player):
+        pass
+
+    @abstractmethod
+    def get_possible_moves(self):
+        pass
+
+    @abstractmethod
+    def check_terminal(self):
+        pass
+
 
 @dataclass
 class MinimaxParameters:
-    s: State
+    s: MinimaxState
     d: int
     alfa: float
     beta: float
@@ -11,7 +30,7 @@ class MinimaxParameters:
 
 def minimax(params: MinimaxParameters):
     if params.d == 0 or params.s.check_terminal():
-        return params.s.evaluate_board(), None
+        return params.s.evaluate(), None
 
     possible_moves = params.s.get_possible_moves()
     best_move = None
