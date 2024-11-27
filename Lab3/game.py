@@ -21,13 +21,13 @@ class Game:
         if self.max_next_move:
             self.max_next_move = False
             move = self.max_player.make_move(self.game_state)
-            next_state = self.game_state.apply_move(move, "O")
-            self.game_state = next_state
+            player = "O"
         else:
             self.max_next_move = True
             move = self.min_player.make_move(self.game_state)
-            next_state = self.game_state.apply_move(move, "X")
-            self.game_state = next_state
+            player = "X"
+        next_state = self.game_state.apply_move(move, player)
+        self.game_state = next_state
 
     def play(self):
         while not self.game_state.check_terminal():
