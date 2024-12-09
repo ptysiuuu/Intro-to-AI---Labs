@@ -7,7 +7,7 @@ def load_and_prep_wine_data():
     df2 = pd.read_csv('winequality-white.csv', sep=';')
     df = pd.concat([df, df2])
     median = df['quality'].median()
-    df['quality'] = df['quality'].apply(lambda x: 1 if x > median else 0)
+    df['quality'] = df['quality'].apply(lambda x: 1 if x > median else -1)
     return df
 
 
