@@ -49,7 +49,7 @@ def main():
         plt.show()
 
         print(f'Accuracy: {accuracy}')
-        print(f'Report: {report}')
+        print(f'Report:\n{report}')
 
 
 main()
