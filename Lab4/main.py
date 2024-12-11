@@ -8,6 +8,8 @@ from matplotlib import pyplot as plt
 
 class LinearKernel(Kernel):
     def __call__(self, x1, x2):
+        x1 = np.array(x1, dtype=np.float64)
+        x2 = np.array(x2, dtype=np.float64)
         return np.dot(x1, x2)
 
 
@@ -17,6 +19,8 @@ class RBFKernel(Kernel):
         self.gamma = gamma
 
     def __call__(self, x1, x2):
+        x1 = np.array(x1, dtype=np.float64)
+        x2 = np.array(x2, dtype=np.float64)
         return np.exp(-self.gamma * np.linalg.norm(x1 - x2) ** 2)
 
 
@@ -24,6 +28,8 @@ def load_and_prep_wine_data():
     df = pd.read_csv('./winequality-red.csv', sep=';')
     df2 = pd.read_csv('./winequality-white.csv', sep=';')
     df = pd.concat([df, df2])
+    df = df.apply(pd.to_numeric, errors='coerce')
+    df = df.dropna()
     median = df['quality'].median()
     df['quality'] = df['quality'].apply(lambda x: 1 if x > median else -1)
     return df
