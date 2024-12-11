@@ -1,6 +1,6 @@
 import numpy as np
 from dataclasses import dataclass
-from typing import Literal, Protocol
+from typing import Literal, Protocol, Sequence
 from cvxopt import matrix, solvers
 from sklearn.metrics import confusion_matrix, classification_report
 
@@ -17,13 +17,23 @@ class SVMParams:
         self.kernel = kernel
 
 
+@dataclass
+class SVMEvalReturn:
+    def __init__(self, accuracy: float, cm: np.ndarray, report: (str | dict)) -> None:
+        self.accuracy = accuracy
+        self.cm = cm
+        self.report = report
+
+
 class SVM:
     def __init__(self, params: SVMParams) -> None:
         self.params = params
-        self.alphas = None
+        self.alphas_ = None
         self.b = None
+        self.support_vectors_ = None
+        self.support_labels_ = None
 
-    def _compute_gram_matrix(self, X, y):
+    def _compute_gram_matrix(self, X: Sequence[float], y: Sequence[float]):
         N = len(y)
         Q = np.zeros((N, N))
         for i in range(N):
@@ -31,7 +41,7 @@ class SVM:
                 Q[i, j] = y[i] * y[j] * self.params.kernel(X[i], X[j])
         return Q
 
-    def fit(self, X, y):
+    def fit(self, X: Sequence[float], y: Sequence[float]):
         X = np.array(X, dtype=np.float64)
         y = np.array(y, dtype=np.float64)
         N = len(y)
@@ -59,7 +69,7 @@ class SVM:
             )
         )
 
-    def decision_function(self, X):
+    def decision_function(self, X: Sequence[float]):
         X = np.array(X, dtype=np.float64)
 
         decision_values = np.zeros(X.shape[0])
@@ -69,14 +79,15 @@ class SVM:
             ) + self.b
         return decision_values
 
-    def predict(self, X):
+    def predict(self, X: Sequence[float]):
+        X = np.array(X, dtype=np.float64)
         return np.sign(self.decision_function(X))
 
-    def evaluate(self, X_test, y_test):
+    def evaluate(self, X_test: Sequence[float], y_test: Sequence[float]):
         y_pred = self.predict(X_test)
         correct = np.sum(y_pred == y_test)
 
         cm = confusion_matrix(y_test, y_pred)
 
         report = classification_report(y_test, y_pred)
-        return correct / len(y_test), cm, report
+        return SVMEvalReturn(correct / len(y_test), cm, report)

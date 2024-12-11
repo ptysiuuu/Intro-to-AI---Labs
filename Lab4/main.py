@@ -47,15 +47,15 @@ def main():
         params = SVMParams(C=1, kernel=rbf_kernel)
         svm_lin = SVM(params)
         svm_lin.fit(X_train, y_train)
-        accuracy, cm, report = svm_lin.evaluate(X_test, y_test)
+        eval_return = svm_lin.evaluate(X_test, y_test)
 
-        sns.heatmap(cm, annot=True, fmt='d')
+        sns.heatmap(eval_return.cm, annot=True, fmt='d')
         plt.xlabel('Predicted label')
         plt.ylabel('True label')
         plt.show()
 
-        print(f'Accuracy: {accuracy}')
-        print(f'Report:\n{report}')
+        print(f'Accuracy: {eval_return.accuracy}')
+        print(f'Report:\n{eval_return.report}')
 
 
 main()
