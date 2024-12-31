@@ -19,7 +19,7 @@ class SVMParams:
 
 @dataclass
 class SVMEvalReturn:
-    def __init__(self, accuracy: float, cm: np.ndarray, report: (str | dict)) -> None:
+    def __init__(self, accuracy: float, cm: np.ndarray, report: dict) -> None:
         self.accuracy = accuracy
         self.cm = cm
         self.report = report
@@ -57,13 +57,13 @@ class SVM:
         solution = solvers.qp(P, q, G, h, A, b)
 
         alphas = np.ravel(solution['x'])
-        support_vector_idx = np.where((alphas > 1e-5) & (alphas < self.params.C))[0]
+        support_vector_idx = np.where((alphas > 1e-5))[0]
         self.support_vectors_ = X[support_vector_idx]
         self.support_labels_ = y[support_vector_idx]
         self.alphas_ = alphas[support_vector_idx]
         self.b = np.mean(
             self.support_labels_ - np.sum(
-                self.alphas_ * self.support_labels_ * 
+                self.alphas_ * self.support_labels_ *
                 np.array([[self.params.kernel(sv, x) for x in self.support_vectors_] for sv in self.support_vectors_]),
                 axis=1
             )
@@ -88,6 +88,6 @@ class SVM:
         correct = np.sum(y_pred == y_test)
 
         cm = confusion_matrix(y_test, y_pred)
-
         report = classification_report(y_test, y_pred)
+
         return SVMEvalReturn(correct / len(y_test), cm, report)
