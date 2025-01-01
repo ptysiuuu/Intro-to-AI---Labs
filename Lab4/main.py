@@ -15,7 +15,7 @@ class LinearKernel(Kernel):
         return np.dot(x1, x2)
 
     def __str__(self):
-        return 'Linear Kernel'
+        return "Linear Kernel"
 
 
 class RBFKernel(Kernel):
@@ -29,7 +29,7 @@ class RBFKernel(Kernel):
         return np.exp(-self.gamma * np.linalg.norm(x1 - x2) ** 2)
 
     def __str__(self):
-        return 'RBF Kernel'
+        return "RBF Kernel"
 
 
 class PolynomialKernel:
@@ -42,38 +42,37 @@ class PolynomialKernel:
 
 
 def load_and_prep_wine_data():
-    df = pd.read_csv('./winequality-red.csv', sep=';')
-    df2 = pd.read_csv('./winequality-white.csv', sep=';')
+    df = pd.read_csv("./winequality-red.csv", sep=";")
+    df2 = pd.read_csv("./winequality-white.csv", sep=";")
     df = pd.concat([df, df2])
-    df = df.apply(pd.to_numeric, errors='coerce')
+    df = df.apply(pd.to_numeric, errors="coerce")
     df = df.dropna()
     return df
 
 
-def extract_from_data(df: pd.DataFrame, n_samples: int=None):
+def extract_from_data(df: pd.DataFrame, n_samples: int = None):
     if n_samples:
         df = df.sample(n_samples)
-    df['quality'] = df['quality'].apply(lambda x: 1 if x > 5 else -1)
-    X = df.drop('quality', axis=1)
-    y = df['quality']
+    df["quality"] = df["quality"].apply(lambda x: 1 if x > 5 else -1)
+    X = df.drop("quality", axis=1)
+    y = df["quality"]
     return X, y
-
 
 
 def accuracy_test(avg_samples, n_samples):
     class Kernels(Enum):
-            rbf_kernel = RBFKernel(gamma=0.1)
-            lin_kernel = LinearKernel()
+        rbf_kernel = RBFKernel(gamma=0.1)
+        lin_kernel = LinearKernel()
 
     df = load_and_prep_wine_data()
 
-    c_s = [1e-3, 1e-2, 1e-1, 1e0, 1e+1, 1e+2, 1e+3]
+    c_s = [1e-3, 1e-2, 1e-1, 1e0, 1e1, 1e2, 1e3]
     c_dict = {}
 
     for kernel in Kernels:
         print(str(kernel.value))
         for c in c_s:
-            print(f'C: {c}')
+            print(f"C: {c}")
             c_avg = 0
             for n in range(avg_samples):
                 X, y = extract_from_data(df, n_samples)
@@ -91,34 +90,37 @@ def accuracy_test(avg_samples, n_samples):
                 # plt.ylabel('True label', fontweight='bold')
                 # plt.show()
 
-                print(f'Iter {n + 1} Accuracy: {eval_return.accuracy}')
+                print(f"Iter {n + 1} Accuracy: {eval_return.accuracy}")
                 c_avg += eval_return.accuracy
             c_avg /= avg_samples
-            print(f'Avg: {c_avg}')
+            print(f"Avg: {c_avg}")
             c_dict[c] = c_avg
 
         plt.scatter(c_dict.keys(), c_dict.values(), label=str(kernel.value))
-        plt.title('Average accuracy for SVM in relation to the C parameter', fontweight="bold")
-        plt.xlabel('C values', fontweight="bold")
-        plt.ylabel('Accuracy', fontweight="bold")
-    plt.xticks([1e-3, 1e-2, 1e-1, 1, 1e1, 1e2, 1e3],
-           [r'$1e-3$', r'$1e-2$', r'$1e-1$', r'$1$', r'$1e1$', r'$1e2$', r'$1e3$'])
-    plt.xscale('log')
+        plt.title(
+            "Average accuracy for SVM in relation to the C parameter", fontweight="bold"
+        )
+        plt.xlabel("C values", fontweight="bold")
+        plt.ylabel("Accuracy", fontweight="bold")
+    plt.xticks(
+        [1e-3, 1e-2, 1e-1, 1, 1e1, 1e2, 1e3],
+        [r"$1e-3$", r"$1e-2$", r"$1e-1$", r"$1$", r"$1e1$", r"$1e2$", r"$1e3$"],
+    )
+    plt.xscale("log")
     plt.grid(True)
     plt.legend()
-    plt.savefig('svm_accuracy.png')
+    plt.savefig("svm_accuracy.png")
     plt.show()
 
 
 def rbf_param_test(avg_samples, n_samples):
-    sigmas = [1e-3, 1e-2, 1e-1, 1e0, 1e+1, 1e+2, 1e+3]
+    sigmas = [1e-3, 1e-2, 1e-1, 1e0, 1e1, 1e2, 1e3]
     sigm_dict = {}
 
     df = load_and_prep_wine_data()
 
-
     for s in sigmas:
-        print(f'Sigma: {s}')
+        print(f"Sigma: {s}")
         s_avg = 0
         for n in range(avg_samples):
             X, y = extract_from_data(df, n_samples)
@@ -137,20 +139,22 @@ def rbf_param_test(avg_samples, n_samples):
             # plt.ylabel('True label', fontweight='bold')
             # plt.show()
 
-            print(f'Iter {n + 1} Accuracy: {eval_return.accuracy}')
+            print(f"Iter {n + 1} Accuracy: {eval_return.accuracy}")
             s_avg += eval_return.accuracy
         s_avg /= avg_samples
-        print(f'Avg: {s_avg}')
+        print(f"Avg: {s_avg}")
         sigm_dict[s] = s_avg
     plt.scatter(sigm_dict.keys(), sigm_dict.values())
-    plt.title('RBF Kernel SVM accuracy in relation to sigma', fontweight="bold")
-    plt.xlabel('Sigma values', fontweight="bold")
-    plt.ylabel('Accuracy', fontweight="bold")
-    plt.xticks([1e-3, 1e-2, 1e-1, 1, 1e1, 1e2, 1e3],
-           [r'$1e-3$', r'$1e-2$', r'$1e-1$', r'$1$', r'$1e1$', r'$1e2$', r'$1e3$'])
-    plt.xscale('log')
+    plt.title("RBF Kernel SVM accuracy in relation to sigma", fontweight="bold")
+    plt.xlabel("Sigma values", fontweight="bold")
+    plt.ylabel("Accuracy", fontweight="bold")
+    plt.xticks(
+        [1e-3, 1e-2, 1e-1, 1, 1e1, 1e2, 1e3],
+        [r"$1e-3$", r"$1e-2$", r"$1e-1$", r"$1$", r"$1e1$", r"$1e2$", r"$1e3$"],
+    )
+    plt.xscale("log")
     plt.grid(True)
-    plt.savefig('rbf_accuracy.png')
+    plt.savefig("rbf_accuracy.png")
     plt.show()
 
 

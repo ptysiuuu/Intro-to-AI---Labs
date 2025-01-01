@@ -50,22 +50,29 @@ class SVM:
         q = matrix(-np.ones(N))
         G = matrix(np.vstack((-np.eye(N), np.eye(N))))
         h = matrix(np.hstack((np.zeros(N), np.ones(N) * self.params.C)))
-        A = matrix(y, (1, N), 'd')
+        A = matrix(y, (1, N), "d")
         b = matrix(0.0)
 
-        solvers.options['show_progress'] = False
+        solvers.options["show_progress"] = False
         solution = solvers.qp(P, q, G, h, A, b)
 
-        alphas = np.ravel(solution['x'])
+        alphas = np.ravel(solution["x"])
         support_vector_idx = np.where((alphas > 1e-5))[0]
         self.support_vectors_ = X[support_vector_idx]
         self.support_labels_ = y[support_vector_idx]
         self.alphas_ = alphas[support_vector_idx]
         self.b = np.mean(
-            self.support_labels_ - np.sum(
-                self.alphas_ * self.support_labels_ *
-                np.array([[self.params.kernel(sv, x) for x in self.support_vectors_] for sv in self.support_vectors_]),
-                axis=1
+            self.support_labels_
+            - np.sum(
+                self.alphas_
+                * self.support_labels_
+                * np.array(
+                    [
+                        [self.params.kernel(sv, x) for x in self.support_vectors_]
+                        for sv in self.support_vectors_
+                    ]
+                ),
+                axis=1,
             )
         )
 
@@ -74,9 +81,16 @@ class SVM:
 
         decision_values = np.zeros(X.shape[0])
         for i, x in enumerate(X):
-            decision_values[i] = np.sum(
-                self.alphas_ * self.support_labels_ * np.array([self.params.kernel(x, sv) for sv in self.support_vectors_])
-            ) + self.b
+            decision_values[i] = (
+                np.sum(
+                    self.alphas_
+                    * self.support_labels_
+                    * np.array(
+                        [self.params.kernel(x, sv) for sv in self.support_vectors_]
+                    )
+                )
+                + self.b
+            )
         return decision_values
 
     def predict(self, X: Sequence[float]):
