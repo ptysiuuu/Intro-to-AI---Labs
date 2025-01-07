@@ -1,7 +1,19 @@
+from typing import Tuple
 import gym
 import numpy as np
 from matplotlib import pyplot as plt
-from q_learning import AlgorithmParams, q_learning, Strategy
+from q_learning import AlgorithmParams, q_learning, Strategy, Environment
+
+
+class GymEnv(Environment):
+    def __init__(self, env_name) -> None:
+        self.env = gym.make(env_name)
+    
+    def reset(self):
+        return self.env.reset()
+    
+    def make_step(self, action: int) -> Tuple[int, int, bool]:
+        return self.env.step(action)
 
 
 class EpsilonGreedyStrategy(Strategy):
@@ -59,12 +71,12 @@ class CountBasedStrategy:
 
 # Comparing strategies
 def compare_strategies(env_name="Taxi-v3", episodes=500, trials=5):
-    env = gym.make(env_name)
+    env = GymEnv(env_name)
 
     strategies = [
-        EpsilonGreedyStrategy(epsilon=0.1, action_space_size=env.action_space.n),
+        EpsilonGreedyStrategy(epsilon=0.1, action_space_size=env.env.action_space.n),
         BoltzmannStrategy(temperature=1.0),
-        CountBasedStrategy(action_space_size=env.action_space.n)
+        CountBasedStrategy(action_space_size=env.env.action_space.n)
     ]
 
     plt.figure(figsize=(12, 6))
@@ -73,7 +85,7 @@ def compare_strategies(env_name="Taxi-v3", episodes=500, trials=5):
         average_rewards = np.zeros(episodes)
 
         for trial in range(trials):
-            q_table = np.zeros((env.observation_space.n, env.action_space.n))
+            q_table = np.zeros((env.env.observation_space.n, env.env.action_space.n))
             params = AlgorithmParams(
                 learning_rate=0.9,
                 discount_factor=0.99,
@@ -104,10 +116,10 @@ def compare_learning_rates(env_name="Taxi-v3", episodes=500, trials=3, learning_
     if learning_rates is None:
         learning_rates = [0.01, 0.1, 0.5, 0.9]
 
-    env = gym.make(env_name)
+    env = GymEnv(env_name)
     strategies = {
-        "Counter Strategy": CountBasedStrategy(action_space_size=env.action_space.n),
-        "Epsilon-Greedy": EpsilonGreedyStrategy(epsilon=0.1, action_space_size=env.action_space.n),
+        "Counter Strategy": CountBasedStrategy(action_space_size=env.env.action_space.n),
+        "Epsilon-Greedy": EpsilonGreedyStrategy(epsilon=0.1, action_space_size=env.env.action_space.n),
         "Boltzmann Strategy": BoltzmannStrategy(temperature=1.0)
     }
 
@@ -118,7 +130,7 @@ def compare_learning_rates(env_name="Taxi-v3", episodes=500, trials=3, learning_
             average_rewards = np.zeros(episodes)
 
             for trial in range(trials):
-                q_table = np.zeros((env.observation_space.n, env.action_space.n))
+                q_table = np.zeros((env.env.observation_space.n, env.env.action_space.n))
                 params = AlgorithmParams(
                     learning_rate=lr,
                     discount_factor=0.99,
@@ -147,5 +159,5 @@ def compare_learning_rates(env_name="Taxi-v3", episodes=500, trials=3, learning_
 
 
 if __name__ == "__main__":
-    # compare_strategies()
-    compare_learning_rates()
+    compare_strategies()
+    # compare_learning_rates()
