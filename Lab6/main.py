@@ -79,13 +79,14 @@ def compare_strategies(env_name="Taxi-v3", episodes=500, trials=5):
                 discount_factor=0.99,
                 epochs=episodes,
                 q_table=q_table,
-                explo_strat=strategy
+                explo_strat=strategy,
+                env=env
             )
 
             rewards = []
             for _ in range(episodes):
-                _, total_reward = q_learning(env, params)
-                rewards.append(float(total_reward)) 
+                _, total_reward = q_learning(params)
+                rewards.append(float(total_reward))
 
             average_rewards += np.array(rewards, dtype=float)
 
@@ -123,12 +124,13 @@ def compare_learning_rates(env_name="Taxi-v3", episodes=500, trials=3, learning_
                     discount_factor=0.99,
                     epochs=episodes,
                     q_table=q_table,
-                    explo_strat=strategy
+                    explo_strat=strategy,
+                    env=env
                 )
 
                 rewards = []
                 for _ in range(episodes):
-                    _, total_reward = q_learning(env, params)
+                    _, total_reward = q_learning(params)
                     rewards.append(float(total_reward))
 
                 rewards_array = np.array(rewards, dtype=float)
