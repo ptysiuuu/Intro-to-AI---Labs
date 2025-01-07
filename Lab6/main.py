@@ -70,4 +70,8 @@ if __name__ == "__main__":
     for episode in range(TRAIN_EPISODES):
         q_table, episode_rewards = q_learning(env, params)
         total_rewards.append(episode_rewards)
-        plt.plot(range(TEST_EPISODES), total_rewards)
+    plt.xlabel('Episode')
+    plt.ylabel('Training total reward')
+    plt.title('Total rewards over all episodes in training') 
+    plt.plot(range(TRAIN_EPISODES), total_rewards)
+    plt.show()
