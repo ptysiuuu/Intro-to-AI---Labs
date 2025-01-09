@@ -10,25 +10,27 @@ class Strategy(Protocol):
         """
         Should return an action choosen using the strategy.
         """
-        pass
+    ...
 
+EnvironmentState = int
+Reward = int
+Action = int
 
 class Environment(Protocol):
-    def reset(self) -> int:
+    def reset(self) -> EnvironmentState:
         """
         Should return a state after resetting the environment.
         """
-        pass
+        ...
 
-    def make_step(self, action: int) -> Tuple[int, int, bool]:
+    def make_step(self, action: Action) -> Tuple[EnvironmentState, Reward, bool]:
         """
         Should apply the given action to the environment and return:
         new state
         reward for action
         information (boolean) if the state is final
         """
-        pass
-
+        ...
 
 @dataclass
 class AlgorithmParams:
