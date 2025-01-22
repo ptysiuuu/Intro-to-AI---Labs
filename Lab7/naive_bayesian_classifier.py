@@ -15,20 +15,6 @@ class GaussianPDF(PDFProtocol):
         return coeff * np.exp(exponent)
 
 
-class UniformPDF(PDFProtocol):
-    def __call__(self, x: float, mean: float, var: float) -> float:
-        lower = mean - np.sqrt(var)
-        upper = mean + np.sqrt(var)
-        return 1.0 / (2.0 * np.sqrt(var)) if lower <= x <= upper else 0.0
-
-
-class LaplacePDF(PDFProtocol):
-    def __call__(self, x: float, mean: float, var: float) -> float:
-        epsilon = 1e-6
-        b = np.sqrt(var + epsilon) / np.sqrt(2)
-        return (1 / (2 * b)) * np.exp(-np.abs(x - mean) / b)
-
-
 class NaiveBayes:
     def __init__(self, pdf: PDFProtocol = None):
         self.class_priors = {}
@@ -72,6 +58,7 @@ class NaiveBayes:
         return predictions
 
 
+    # For compatibility with Sklearn
     def get_params(self, deep=True):
         return {}
 
