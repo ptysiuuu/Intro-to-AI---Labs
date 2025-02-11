@@ -1,9 +1,31 @@
 import numpy as np
 from time import time
 from copy import deepcopy
+from dataclasses import dataclass
+from typing import Sequence, Callable
 
 
-def gradient_func(f, x, epsilon):
+@dataclass
+class GradParams:
+    f: Callable
+    x: Sequence[float]
+    epsilon: float
+
+
+@dataclass
+class SGDParams:
+    f: Callable
+    x: Sequence[float]
+    beta: float
+    epsilon: float
+    iterations: int
+    max_bound: float
+
+
+def gradient_func(params: GradParams):
+    epsilon = params.epsilon
+    f = params.f
+    x = params.x
     H = epsilon
     y = f(x)
     dimensions = len(x[0])
@@ -16,7 +38,13 @@ def gradient_func(f, x, epsilon):
     return gradient_value
 
 
-def solver(f, x, beta, epsilon, iterations, max_bound):
+def solver(params: SGDParams):
+    f = params.f
+    x = params.x
+    beta = params.beta
+    epsilon = params.epsilon
+    iterations = params.iterations
+    max_bound = params.max_bound
     values = []
     start = time()
     for n in range(1, iterations + 1):

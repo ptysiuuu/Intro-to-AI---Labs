@@ -1,4 +1,4 @@
-from solver import solver
+from solver import solver, SGDParams
 from cec2017.functions import f3, f12
 import numpy as np
 from matplotlib import pyplot as plt
@@ -40,9 +40,8 @@ def main():
 
     for n in range(TRIALS):
         x0 = np.random.uniform(-MAX_BOUND, MAX_BOUND, size=(1, 10))
-        result, iterations, values, time = solver(
-            FUNCTION, x0, BETA, EPSILON, MAX_ITERATIONS, MAX_BOUND
-        )
+        params = SGDParams(FUNCTION, x0, BETA, EPSILON, MAX_ITERATIONS, MAX_BOUND)
+        result, iterations, values, time = solver(params)
         print(f"Trial number {n + 1}.")
         print(f"Final point: X = {np.round(result, decimals=2)[0]}")
         print(f"q(X) = {np.round(FUNCTION(result), decimals=2)}")
